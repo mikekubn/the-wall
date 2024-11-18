@@ -1,0 +1,17 @@
+{
+  "singleQuote": true,
+  "tabWidth": 2,
+  "semi": true,
+  "printWidth": 150,
+  "bracketSpacing": true,
+  "bracketSameLine": true,
+  "arrowParens": "always",
+  "overrides": [
+    {
+      "files": "*.svg",
+      "options": {
+        "parser": "html"
+      }
+    }
+  ]
+}
