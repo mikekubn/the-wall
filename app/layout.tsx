@@ -4,6 +4,7 @@ import TheWallComputer from '@/public/the-wall-logo.svg';
 import { Toaster } from '@/components/ui/toaster';
 
 import './globals.css';
+import AddWisdom from '@/components/add-wisdom';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -27,6 +28,7 @@ const RootLayout = ({ children }: Readonly<RootLayoutProps>) => {
             <h1 className="text-[22px] md:text-4xl font-bold font-inter text-center">The Wall of Digital Wisdom</h1>
           </section>
           {children}
+          <AddWisdom />
         </main>
         <Toaster />
       </body>
