@@ -1,21 +1,32 @@
-import { Button } from '@/components/ui/button';
-import DarkLogo from '@/public/logo/dark_logo.svg';
-import Link from 'next/link';
+import DialogUrl from '@/components/dialog-url';
+import Post from '@/components/post';
+import { items, SortProps } from '@/type';
+import React, { Suspense } from 'react';
 
-const HomePage = () => {
+const HomePage = async ({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) => {
+  const params = await searchParams;
+  const sort = {
+    sort: params.sort as string,
+    id: params.id as string,
+  } as unknown as SortProps;
+
+  console.log('sort', sort);
+
   return (
-    <main className="flex min-h-screen flex-col items-center p-24">
-      <section className="flex flex-row items-center gap-4">
-        <DarkLogo className="size-12" />
-        <h1 className="text-4xl font-bold">Hello, world!</h1>
-      </section>
-      <div className="h-10" />
-      <Button asChild variant="default">
-        <Link title="the12st" href="https://www.the12st.com/" target="_blank">
-          the12st
-        </Link>
-      </Button>
-    </main>
+    <section className="w-full flex flex-1 flex-col">
+      <div className="w-full flex flex-row flex-wrap items-center justify-center flex-1 gap-6 md:gap-y-10">
+        {Array.from({ length: 50 }, () =>
+          items.map((item, index) => (
+            <Suspense key={index} fallback={<div>Loading...</div>}>
+              <Post post={item} />
+            </Suspense>
+          )),
+        )}
+      </div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <DialogUrl />
+      </Suspense>
+    </section>
   );
 };
 

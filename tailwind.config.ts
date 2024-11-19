@@ -5,6 +5,9 @@ const config: Config = {
   content: ['./components/**/*.{ts,tsx}', './app/**/*.{ts,tsx}'],
   theme: {
     extend: {
+      fontFamily: {
+        inter: ['var(--font-inter)', 'sans-serif'],
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
@@ -15,6 +18,12 @@ const config: Config = {
         green: '#00FF00',
         pink: '#FFC0CB',
         orange: '#FFA500',
+        gray: '#6D6E76',
+        gray_1: '#8E8E93',
+        gray_2: '#AEAEB2',
+        gray_3: '#C7C7CC',
+        gray_5: '#E5E5EA',
+        blue: '#007AFF',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
