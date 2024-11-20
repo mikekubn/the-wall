@@ -29,7 +29,9 @@ const HomePage = async ({ searchParams }: { searchParams: Promise<{ [key: string
       <div className="w-full flex flex-row flex-wrap items-center justify-center flex-1 gap-6 md:gap-y-10">
         {Array.from({ length: 50 }, () =>
           items.map((post) => (
-            <Suspense key={post.id} fallback={<div>Loading...</div>}>
+            <Suspense
+              key={post.id}
+              fallback={<div className="animate-pulse relative h-[220px] w-[90%] md:w-[406px] md:h-[251px] rounded-[12px] bg-gray_5" />}>
               <Post post={post} />
             </Suspense>
           )),
