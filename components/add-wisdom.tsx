@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import useShortcut, { KEYS } from '@/hooks/use-shortcut';
-import Script from 'next/script';
+import Turnstile from 'react-turnstile';
 
 const schema = z.object({
   role: z.string().min(1, { message: 'Required' }),
@@ -16,7 +16,9 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 const AddWisdom = () => {
+  // const turnstile = useTurnstile();
   const [isOpen, setIsOpen] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
 
   const {
     register,
@@ -33,6 +35,8 @@ const AddWisdom = () => {
   };
 
   const onSubmit = (data: FormValues) => {
+    if (!isVerified) return;
+
     console.log(data);
 
     setTimeout(() => {
@@ -73,7 +77,7 @@ const AddWisdom = () => {
       {isOpen && (
         <div className="dialog-backdrop fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={handleOutsideClick}>
           <div
-            className="dialog-content bg-white shadow-lg relative w-[380px] h-fit md:w-1/2 rounded-[12px] p-4 md:p-12"
+            className="dialog-content bg-white shadow-lg relative w-[380px] h-fit md:max-h-[90%] overflow-y-auto md:w-1/2 rounded-[12px] p-4 md:p-12"
             onClick={(e) => e.stopPropagation()}>
             <button className="absolute top-2 right-4 text-black hover:text-blue" onClick={closeModal}>
               ×
@@ -115,17 +119,31 @@ const AddWisdom = () => {
                     <p className="text-[10px] text-rose-600">{errors?.message?.message}</p>
                   </div>
                 </div>
-                <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
-                <div
-                  className="cf-turnstile"
-                  data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-                  data-callback="javascriptCallback"
-                  data-size="flexible"
-                  data-theme="light"
+                <Turnstile
+                  sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY as string}
+                  theme="light"
+                  language="en"
+                  size="flexible"
+                  refreshExpired="auto"
+                  onSuccess={(token, preClearanceObtained) => {
+                    setIsVerified(true);
+                    console.log('Token:', token);
+                    console.log('Pre-clearance obtained:', preClearanceObtained);
+                  }}
+                  onVerify={(token) => {
+                    console.log('Token:', token);
+                    // fetch('/login', {
+                    //   method: 'POST',
+                    //   body: JSON.stringify({ token }),
+                    // }).then((response) => {
+                    //   if (!response.ok) turnstile.reset();
+                    // });
+                  }}
                 />
                 <button
                   type="submit"
-                  className="flex flex-col items-center justify-center md:text-[17px] text-white bg-blue rounded-[12px] h-[50px] px-[20px] hover:bg-white hover:text-black hover:border border-black">
+                  disabled={!isVerified}
+                  className="flex flex-col items-center justify-center md:text-[17px] text-white bg-blue rounded-[12px] h-[50px] px-[20px] hover:bg-white hover:text-black hover:border border-black disabled:cursor-not-allowed">
                   Send wisdom
                 </button>
               </form>
