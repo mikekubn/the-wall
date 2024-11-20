@@ -3,8 +3,19 @@ import Post from '@/components/post';
 import SortMenu from '@/components/sort-menu';
 import { items } from '@/type';
 import React, { Suspense } from 'react';
+import { redirect } from 'next/navigation';
 
-const HomePage = () => {
+const HomePage = async ({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) => {
+  const sort = (await searchParams).sort as string;
+  const id = (await searchParams).id as string;
+
+  if (!sort) {
+    if (id) {
+      redirect(`/?sort=new&id=${id}`);
+    }
+    redirect('/?sort=new');
+  }
+
   return (
     <section className="w-full flex flex-1 flex-col">
       <Suspense fallback={<div>Loading...</div>}>
