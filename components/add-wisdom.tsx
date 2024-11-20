@@ -84,7 +84,7 @@ const AddWisdom = () => {
                 This entire activity is for the amusement of the community of developers, designers, product managers, and others in the field. We do
                 not store any personal data, and after reviewing the post, we discard it.
               </p>
-              <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
+              <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
                 <div className="inline-flex w-[340px] justify-between">
                   <label className="font-bold text-[14px] text-gray">Who said that?</label>
                   <div className="flex flex-col gap-1">
