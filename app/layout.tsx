@@ -16,8 +16,23 @@ export const metadata: Metadata = {
   title: 'The Wall of Digital Wisdom',
   description: 'A wall of digital wisdom for the digital age.',
   robots: 'index, follow',
+  openGraph: {
+    type: 'website',
+    locale: 'en_IE',
+    url: 'https://thewallofdigitalwisdom.vercel.app',
+    title: 'The Wall of Digital Wisdom',
+    description: 'A wall of digital wisdom for the digital age.',
+    images: [
+      {
+        url: 'https://res.cloudinary.com/dctc6iyms/image/upload/v1732123375/og-the-wall_rxdgre.png',
+        width: 1200,
+        height: 630,
+        alt: 'The Wall of Digital Wisdom',
+      },
+    ],
+  },
   alternates: {
-    canonical: 'https://the-wall-wisdom.vercel.app',
+    canonical: 'https://thewallofdigitalwisdom.vercel.app',
   },
 };
 

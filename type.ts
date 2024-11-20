@@ -22,4 +22,14 @@ export const items = [
       down: 50,
     },
   },
+  {
+    id: '2',
+    role: 'Frontend Developer',
+    message: 'Frontend komunikuje s backandem, já jsem byl head of strategy v Raiffce!',
+    date: '2021-09-02T00:00:00.000Z',
+    rate: {
+      up: 1000,
+      down: 100,
+    },
+  },
 ];
