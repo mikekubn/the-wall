@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Rating from '@/components/rating';
 import { Share } from 'lucide-react';
+import useShortcut, { KEYS } from '@/hooks/use-shortcut';
 
 const DialogUrl = () => {
   const [post, setPost] = useState<PostProps | null>(null);
@@ -27,6 +28,10 @@ const DialogUrl = () => {
       closeModal();
     }
   };
+
+  useShortcut(KEYS.ESCAPE, () => {
+    closeModal();
+  });
 
   useEffect(() => {
     if (id) {

@@ -1,10 +1,11 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 'use client';
 
+import * as z from 'zod';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import useShortcut, { KEYS } from '@/hooks/use-shortcut';
 
 const schema = z.object({
   role: z.string().min(1, { message: 'Required' }),
@@ -45,6 +46,10 @@ const AddWisdom = () => {
       closeModal();
     }
   };
+
+  useShortcut(KEYS.ESCAPE, () => {
+    closeModal();
+  });
 
   useEffect(() => {
     if (isOpen) {
