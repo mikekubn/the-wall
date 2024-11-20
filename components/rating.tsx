@@ -20,14 +20,14 @@ const Rating: React.FC<{ post: PostProps }> = ({ post }) => {
   };
 
   return (
-    <div className="inline-flex gap-2 md:gap-4 text-gray_1 group-hover:text-white">
-      <button onClick={handleRateUp} className="inline-flex items-center gap-1 hover:opacity-60">
-        <ChevronUp className="size-[12px] md:size-[16px]" />
-        <span className="text-[12px] md:text-[16px]">{up}</span>
+    <div className="inline-flex gap-2 md:gap-4">
+      <button onClick={handleRateUp} className="inline-flex items-center gap-1 text-lime-700 group-hover:text-white">
+        <ChevronUp className="size-[16px]" />
+        <span className="text-[16px]">{up}</span>
       </button>
-      <button onClick={handleRateDown} className="inline-flex items-center gap-1 hover:opacity-60">
-        <ChevronDown className="size-[12px] md:size-[16px]" />
-        <span className="text-[12px] md:text-[16px]">{down}</span>
+      <button onClick={handleRateDown} className="inline-flex items-center gap-1 text-rose-600 group-hover:text-white">
+        <ChevronDown className="size-[16px]" />
+        <span className="text-[16px]">{down}</span>
       </button>
     </div>
   );

@@ -26,8 +26,8 @@ const ShareButton: React.FC<{ id: PostProps['id'] }> = ({ id }) => {
   }, [id, sort]);
 
   return (
-    <button onClick={handleCopyUrl} className="inline-flex gap-1 text-gray_1 group-hover:text-white w-[16px] h-[14px] hover:opacity-60">
-      <Link className="size-[12px] md:size-[15px]" />
+    <button onClick={handleCopyUrl} className="inline-flex gap-1 text-gray_1 group-hover:text-white size-[16px]">
+      <Link className="size-[16px]" />
     </button>
   );
 };
