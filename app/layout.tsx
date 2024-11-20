@@ -12,7 +12,14 @@ const inter = Inter({
   display: 'swap',
 });
 
-export const metadata: Metadata = {};
+export const metadata: Metadata = {
+  title: 'The Wall of Digital Wisdom',
+  description: 'A wall of digital wisdom for the digital age.',
+  robots: 'index, follow',
+  alternates: {
+    canonical: 'https://the-wall-wisdom.vercel.app',
+  },
+};
 
 interface RootLayoutProps {
   children: React.ReactNode;
