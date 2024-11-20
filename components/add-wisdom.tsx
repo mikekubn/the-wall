@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import useShortcut, { KEYS } from '@/hooks/use-shortcut';
+import Script from 'next/script';
 
 const schema = z.object({
   role: z.string().min(1, { message: 'Required' }),
@@ -114,6 +115,14 @@ const AddWisdom = () => {
                     <p className="text-[10px] text-rose-600">{errors?.message?.message}</p>
                   </div>
                 </div>
+                <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
+                <div
+                  className="cf-turnstile"
+                  data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+                  data-callback="javascriptCallback"
+                  data-size="flexible"
+                  data-theme="light"
+                />
                 <button
                   type="submit"
                   className="flex flex-col items-center justify-center md:text-[17px] text-white bg-blue rounded-[12px] h-[50px] px-[20px] hover:bg-white hover:text-black hover:border border-black">
