@@ -6,22 +6,26 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import useShortcut, { KEYS } from '@/hooks/use-shortcut';
-import Turnstile from 'react-turnstile';
+import Turnstile, { useTurnstile } from 'react-turnstile';
+import { useToast } from '@/hooks/use-toast';
 
 const schema = z.object({
   role: z.string().min(1, { message: 'Required' }),
   message: z.string().min(1, { message: 'Required' }),
+  'cf-turnstile': z.string().optional(),
 });
 
 type FormValues = z.infer<typeof schema>;
 
 const AddWisdom = () => {
-  // const turnstile = useTurnstile();
+  const { toast } = useToast();
+  const turnstile = useTurnstile();
   const [isOpen, setIsOpen] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
 
   const {
     register,
+    reset,
     handleSubmit,
     setValue,
     formState: { errors },
@@ -34,16 +38,35 @@ const AddWisdom = () => {
     document.body.classList.remove('no-scroll');
   };
 
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = async (data: FormValues) => {
     if (!isVerified) return;
 
-    console.log(data);
+    try {
+      const response = await fetch('/api/wisdom/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
-    setTimeout(() => {
-      setValue('role', '');
-      setValue('message', '');
-      closeModal();
-    }, 300);
+      if (response.ok) {
+        reset();
+        closeModal();
+        toast({
+          title: 'Success 🎉',
+          description: 'Wisdom added successfully',
+        });
+      } else {
+        turnstile.reset();
+        toast({
+          title: 'Error 🚨',
+          description: 'Failed to add wisdom',
+        });
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   const handleOutsideClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -120,24 +143,21 @@ const AddWisdom = () => {
                   </div>
                 </div>
                 <Turnstile
+                  id="cf-turnstile"
+                  {...register('cf-turnstile')}
                   sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY as string}
                   theme="light"
                   language="en"
                   size="flexible"
+                  retry="auto"
                   refreshExpired="auto"
-                  onSuccess={(token, preClearanceObtained) => {
-                    setIsVerified(true);
-                    console.log('Token:', token);
-                    console.log('Pre-clearance obtained:', preClearanceObtained);
-                  }}
                   onVerify={(token) => {
-                    console.log('Token:', token);
-                    // fetch('/login', {
-                    //   method: 'POST',
-                    //   body: JSON.stringify({ token }),
-                    // }).then((response) => {
-                    //   if (!response.ok) turnstile.reset();
-                    // });
+                    if (token) {
+                      setValue('cf-turnstile', token);
+                      setIsVerified(true);
+                    } else {
+                      setIsVerified(false);
+                    }
                   }}
                 />
                 <button
