@@ -1,7 +1,7 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 'use client';
 
-import { items, PostProps } from '@/type';
+import { item, PostProps } from '@/type';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Rating from '@/components/rating';
@@ -49,9 +49,9 @@ const DialogUrl = () => {
     }
 
     if (id) {
-      const item = items.find((i) => i.id === id);
-      if (item) {
-        setPost(item);
+      const val = [item].find((i) => i.id === id);
+      if (val) {
+        setPost(val);
       }
     }
   }, [id]);

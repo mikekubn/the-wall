@@ -8,7 +8,7 @@ import { useSearchParams } from 'next/navigation';
 
 const Post: React.FC<{ post: PostProps }> = ({ post }) => {
   const searchParams = useSearchParams();
-  const date = new Date(post?.date);
+  const date = new Date(post?.createdAt);
   const options: Intl.DateTimeFormatOptions = { month: 'long', year: 'numeric' };
   const formattedDate = date.toLocaleDateString('en-US', options);
 

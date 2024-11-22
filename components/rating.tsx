@@ -14,8 +14,6 @@ const Rating: React.FC<{ post: PostProps }> = ({ post }) => {
   };
 
   const handleRateDown = () => {
-    if (down === 0) return;
-
     setDown(down - 1);
   };
 

@@ -1,35 +1,27 @@
 export type SortProps = 'new' | 'like' | 'old';
 
+export type Status = 'pending' | 'approved' | 'rejected';
+
 export interface PostProps {
   id: string;
+  createdAt: string;
   role: string;
   message: string;
-  date: string;
+  status: Status;
   rate: {
     up: number;
     down: number;
   };
 }
 
-export const items = [
-  {
-    id: '1',
-    role: 'Project Manager',
-    message: 'Frontend komunikuje s backandem.',
-    date: '2021-09-01T00:00:00.000Z',
-    rate: {
-      up: 1200,
-      down: 50,
-    },
+export const item: PostProps = {
+  id: crypto.randomUUID(),
+  createdAt: new Date().toISOString(),
+  role: 'Developer',
+  message: 'Hello, World!',
+  status: 'pending',
+  rate: {
+    up: 0,
+    down: 0,
   },
-  {
-    id: '2',
-    role: 'Frontend Developer',
-    message: 'Frontend komunikuje s backandem, já jsem byl head of strategy v Raiffce!',
-    date: '2021-09-02T00:00:00.000Z',
-    rate: {
-      up: 1000,
-      down: 100,
-    },
-  },
-];
+};

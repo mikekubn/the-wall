@@ -1,9 +1,9 @@
 import DialogUrl from '@/components/dialog-url';
 import Post from '@/components/post';
 import SortMenu from '@/components/sort-menu';
-import { items } from '@/type';
 import React, { Suspense } from 'react';
 import { redirect } from 'next/navigation';
+import { item } from '@/type';
 
 const HomePage = async ({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) => {
   const sort = (await searchParams).sort as string;
@@ -28,7 +28,7 @@ const HomePage = async ({ searchParams }: { searchParams: Promise<{ [key: string
       </Suspense>
       <div className="w-full flex flex-row flex-wrap items-center justify-center flex-1 gap-6 md:gap-y-10">
         {Array.from({ length: 50 }, () =>
-          items.map((post) => (
+          [item].map((post) => (
             <Suspense
               key={post.id}
               fallback={<div className="animate-pulse relative h-[220px] w-[90%] md:w-[406px] md:h-[251px] rounded-[12px] bg-gray_5" />}>
