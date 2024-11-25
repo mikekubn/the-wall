@@ -1,4 +1,4 @@
-import { DataTableDemo } from '@/components/posts';
+import PostTable from '@/components/PostTable';
 import { auth, signOut } from '@/lib/auth';
 import Link from 'next/link';
 
@@ -35,7 +35,7 @@ const DashboardPage = async () => {
           </form>
         </div>
       </div>
-      <DataTableDemo />
+      <PostTable />
     </section>
   );
 };
