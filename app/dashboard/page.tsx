@@ -1,9 +1,10 @@
+import DashboardInfo from '@/components/dashboard-info';
 import PostTable from '@/components/PostTable';
-import { auth, signOut } from '@/lib/auth';
+import { getSession } from '@/lib/auth';
 import Link from 'next/link';
 
 const DashboardPage = async () => {
-  const session = await auth();
+  const session = await getSession();
 
   if (!session) {
     return (
@@ -19,22 +20,7 @@ const DashboardPage = async () => {
 
   return (
     <section className="flex flex-col size-full max-w-screen-lg">
-      <div className="h-10 flex flex-row justify-between items-center mb-8">
-        <h1 className="text-4xl">Dashboard</h1>
-        <div className="flex flex-row gap-2">
-          <p>{session?.user?.email}</p>
-          <p>|</p>
-          <form
-            action={async () => {
-              'use server';
-              await signOut({ redirectTo: '/' });
-            }}>
-            <button type="submit" className="hover:underline">
-              Sign Out
-            </button>
-          </form>
-        </div>
-      </div>
+      <DashboardInfo />
       <PostTable />
     </section>
   );

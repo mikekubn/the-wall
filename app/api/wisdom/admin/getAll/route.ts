@@ -1,8 +1,8 @@
-import { auth } from '@/lib/auth';
+import { getSession } from '@/lib/auth';
 import prisma from '@/lib/prisma';
 
 export const GET = async () => {
-  const session = await auth();
+  const session = await getSession();
 
   if (!session) {
     return new Response(JSON.stringify({ success: false, error: 'Not authenticated' }), {

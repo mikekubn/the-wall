@@ -1,7 +1,16 @@
+import { getSession } from '@/lib/auth';
 import prisma from '@/lib/prisma';
 import { PostProps } from '@/type';
 
 export const PATCH = async (req: Request) => {
+  const session = await getSession();
+
+  if (!session) {
+    return new Response(JSON.stringify({ success: false, error: 'Not authenticated' }), {
+      status: 401,
+    });
+  }
+
   const request = await req.json();
   const { id, status, role, message } = request;
 

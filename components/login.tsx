@@ -1,18 +1,25 @@
 'use client';
 import { signIn } from 'next-auth/react';
+import { FormEvent } from 'react';
 
 const Login = () => {
-  const credentialsAction = (formData: FormData) => {
-    const formObject: { [key: string]: string } = {};
-    formData.forEach((value, key) => {
-      formObject[key] = value.toString();
-    });
+  const handleCredentials = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-    signIn('credentials', { redirectTo: '/dashboard', ...formObject });
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    signIn('credentials', {
+      redirect: true,
+      callbackUrl: '/dashboard',
+      email,
+      password,
+    });
   };
 
   return (
-    <form className="flex flex-col items-center justify-center gap-5" action={credentialsAction}>
+    <form className="flex flex-col items-center justify-center gap-5" onSubmit={handleCredentials}>
       <label htmlFor="credentials-email" className="flex flex-col font-bold text-[14px] text-gray">
         Email
         <input

@@ -6,6 +6,8 @@ import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 import AddWisdom from '@/components/add-wisdom';
 import Link from 'next/link';
+import Providers from './providers';
+import { getSession } from '@/lib/auth';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -41,7 +43,9 @@ interface RootLayoutProps {
   children: React.ReactNode;
 }
 
-const RootLayout = ({ children }: Readonly<RootLayoutProps>) => {
+const RootLayout = async ({ children }: Readonly<RootLayoutProps>) => {
+  const session = await getSession();
+
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -52,7 +56,7 @@ const RootLayout = ({ children }: Readonly<RootLayoutProps>) => {
             </Link>
             <h1 className="text-[22px] md:text-4xl font-bold font-inter text-center">The Wall of Digital Wisdom</h1>
           </section>
-          {children}
+          <Providers session={session}>{children}</Providers>
           <AddWisdom />
         </main>
         <Toaster />

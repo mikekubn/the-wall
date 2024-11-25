@@ -1,10 +1,10 @@
-import NextAuth from 'next-auth';
+import { AuthOptions, getServerSession } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import bcrypt from 'bcryptjs';
 import prisma from '@/lib/prisma';
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     Credentials({
@@ -19,10 +19,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         try {
           const _user = await prisma.user.findUnique({
-            where: { email: credentials.email as string },
+            where: { email: credentials?.email as string },
           });
 
-          if (_user && credentials.password) {
+          if (_user && credentials?.password) {
             const isPasswordValid = await bcrypt.compare(credentials.password as string, _user.password);
 
             if (isPasswordValid) {
@@ -41,7 +41,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
-  trustHost: true,
   pages: {
     signIn: '/login',
     signOut: '/',
@@ -50,4 +49,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
     strategy: 'jwt',
   },
-});
+};
+
+const getSession = () => getServerSession(authOptions);
+
+export { authOptions, getSession };
