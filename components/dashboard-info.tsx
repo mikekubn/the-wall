@@ -11,7 +11,7 @@ const DashboardInfo = () => {
       <div className="flex flex-row gap-2">
         <p>{session?.user?.email}</p>
         <p>|</p>
-        <button onClick={() => signOut()} type="button" className="hover:underline">
+        <button onClick={() => signOut({ redirect: true, callbackUrl: '/' })} type="button" className="hover:underline">
           Sign Out
         </button>
       </div>

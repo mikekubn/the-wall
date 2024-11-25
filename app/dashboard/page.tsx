@@ -1,5 +1,5 @@
 import DashboardInfo from '@/components/dashboard-info';
-import PostTable from '@/components/PostTable';
+import PostTable from '@/components/post-table';
 import { getSession } from '@/lib/auth';
 import Link from 'next/link';
 
