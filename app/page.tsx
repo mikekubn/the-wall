@@ -3,11 +3,20 @@ import Post from '@/components/post';
 import SortMenu from '@/components/sort-menu';
 import React, { Suspense } from 'react';
 import { redirect } from 'next/navigation';
-import { item } from '@/type';
+import { PostProps } from '@/type';
 
 const HomePage = async ({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) => {
   const sort = (await searchParams).sort as string;
   const id = (await searchParams).id as string;
+  let posts: PostProps[] = [];
+
+  try {
+    const promise = await fetch(`${process.env.NEXT_PUBLIC_ENDPOINT}/api/wisdom/getAll`);
+    const response: { success: boolean; items: PostProps[] } = await promise.json();
+    posts = response?.items;
+  } catch (error) {
+    console.error('GET request failed', (error as Error).message);
+  }
 
   if (!sort) {
     if (id) {
@@ -27,17 +36,15 @@ const HomePage = async ({ searchParams }: { searchParams: Promise<{ [key: string
         <SortMenu />
       </Suspense>
       <div className="w-full flex flex-row flex-wrap items-center justify-center flex-1 gap-6 md:gap-y-10">
-        {Array.from({ length: 50 }, () =>
-          [item].map((post) => (
-            <Suspense
-              key={post.id}
-              fallback={<div className="animate-pulse relative h-[220px] w-[90%] md:w-[406px] md:h-[251px] rounded-[12px] bg-gray_5" />}>
-              <Post post={post} />
-            </Suspense>
-          )),
-        )}
+        {posts?.map((post) => (
+          <Suspense
+            key={post.id}
+            fallback={<div className="animate-pulse relative h-[220px] w-[90%] md:w-[406px] md:h-[251px] rounded-[12px] bg-gray_5" />}>
+            <Post post={post} />
+          </Suspense>
+        ))}
       </div>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={null}>
         <DialogUrl />
       </Suspense>
     </section>

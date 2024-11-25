@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { PostProps } from '@/type';
 import { ChevronUp } from 'lucide-react';
 import { ChevronDown } from 'lucide-react';
+import { PostProps } from '@/type';
 
 const Rating: React.FC<{ post: PostProps }> = ({ post }) => {
   const [up, setUp] = React.useState(post?.rate.up);

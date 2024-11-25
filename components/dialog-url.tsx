@@ -1,12 +1,12 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 'use client';
 
-import { item, PostProps } from '@/type';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Rating from '@/components/rating';
 import { Share } from 'lucide-react';
 import useShortcut, { KEYS } from '@/hooks/use-shortcut';
+import { PostProps } from '@/type';
 
 const DialogUrl = () => {
   const [post, setPost] = useState<PostProps | null>(null);
@@ -16,6 +16,12 @@ const DialogUrl = () => {
   const params = new URLSearchParams(searchParams.toString());
   const sort = params.get('sort');
   const id = params.get('id');
+
+  const fetchPost = useCallback(async () => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_ENDPOINT}/api/wisdom/get?id=${id}`);
+    const data: { success: boolean; item: PostProps } = await response.json();
+    setPost(data.item);
+  }, [id]);
 
   const closeModal = () => {
     setOpen(false);
@@ -49,12 +55,9 @@ const DialogUrl = () => {
     }
 
     if (id) {
-      const val = [item].find((i) => i.id === id);
-      if (val) {
-        setPost(val);
-      }
+      fetchPost();
     }
-  }, [id]);
+  }, [fetchPost, id]);
 
   if (!id) {
     return null;
