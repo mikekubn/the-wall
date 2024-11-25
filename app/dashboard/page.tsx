@@ -27,7 +27,7 @@ const DashboardPage = async () => {
           <form
             action={async () => {
               'use server';
-              await signOut();
+              await signOut({ redirectTo: '/' });
             }}>
             <button type="submit" className="hover:underline">
               Sign Out
