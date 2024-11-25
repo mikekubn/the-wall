@@ -35,7 +35,7 @@ const HomePage = async ({ searchParams }: { searchParams: Promise<{ [key: string
         }>
         <SortMenu />
       </Suspense>
-      <div className="w-full flex flex-row flex-wrap items-center justify-center flex-1 gap-6 md:gap-y-10">
+      <div className="w-full flex flex-row flex-wrap items-start md:items-center justify-center flex-1 gap-6 md:gap-y-10">
         {posts?.map((post) => (
           <Suspense
             key={post.id}

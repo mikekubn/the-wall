@@ -1,4 +1,5 @@
 'use client';
+
 import { signIn } from 'next-auth/react';
 import { FormEvent } from 'react';
 
@@ -27,7 +28,7 @@ const Login = () => {
           name="email"
           type="email"
           placeholder="E-mail"
-          className="font-normal text-[14px] w-[180px] border border-gray px-1.5 py-0.5 rounded-md"
+          className="font-normal text-[14px] w-[240px] border border-gray px-1.5 py-2 rounded-md"
         />
       </label>
       <label htmlFor="credentials-password" className="flex flex-col font-bold text-[14px] text-gray">
@@ -37,7 +38,7 @@ const Login = () => {
           name="password"
           type="password"
           placeholder="Password"
-          className="font-normal text-[14px] w-[180px] border border-gray px-1.5 py-0.5 rounded-md"
+          className="font-normal text-[14px] w-[240px] border border-gray px-1.5 py-2 rounded-md"
         />
       </label>
       <button

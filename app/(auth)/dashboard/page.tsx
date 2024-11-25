@@ -1,26 +1,23 @@
 import DashboardInfo from '@/components/dashboard-info';
 import PostTable from '@/components/post-table';
 import { getSession } from '@/lib/auth';
-import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 const DashboardPage = async () => {
   const session = await getSession();
 
   if (!session) {
-    return (
-      <div>
-        <Link
-          href="/login"
-          className="w-[180px] flex flex-col items-center justify-center md:text-[17px] text-white bg-blue rounded-[12px] py-2 hover:bg-white hover:text-black">
-          Login
-        </Link>
-      </div>
-    );
+    redirect('/login');
   }
 
   return (
     <section className="flex flex-col size-full max-w-screen-lg">
-      <DashboardInfo />
+      <div className="fixed top-0 left-0 w-full flex flex-row flex-1 justify-center px-4">
+        <div className="w-[1024px]">
+          <DashboardInfo />
+        </div>
+      </div>
+      <div className="h-36" />
       <PostTable />
     </section>
   );

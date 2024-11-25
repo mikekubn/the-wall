@@ -10,7 +10,7 @@ const SortMenu = () => {
   const sort = searchParams.get('sort') as SortProps;
 
   return (
-    <div className="flex flex-row justify-center gap-4 flex-1 text-gray mb-10">
+    <div className="flex flex-row justify-center gap-4 text-gray mb-10">
       <Link
         href={{ query: 'sort=new' }}
         className={clsx({
