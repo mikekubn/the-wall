@@ -10,7 +10,8 @@
     "lint:fix": "next lint --fix",
     "prettier:fix": "prettier --write --ignore-unknown .",
     "prettier:check": "prettier --check --ignore-unknown .",
-    "ts:check": "npx tsc"
+    "ts:check": "npx tsc",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
