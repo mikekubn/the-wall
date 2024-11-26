@@ -4,9 +4,9 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import Rating from '@/components/rating';
-import { Share } from 'lucide-react';
 import useShortcut, { KEYS } from '@/hooks/use-shortcut';
 import { PostProps } from '@/type';
+import CopiedButton from '@/components/copied';
 
 const DialogUrl = () => {
   const [post, setPost] = useState<PostProps | null>(null);
@@ -90,7 +90,7 @@ const DialogUrl = () => {
             </div>
             <div className="flex flex-row gap-6 items-center">
               {post && <Rating post={post} />}
-              <Share className="size-[16px] text-gray_1" />
+              <CopiedButton id={post?.id as string} />
             </div>
           </div>
         )}
