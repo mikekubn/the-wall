@@ -25,9 +25,9 @@ const DashboardPage = async () => {
   const posts: PostProps[] = await getPosts();
 
   return (
-    <section className="flex flex-col size-full max-w-screen-lg">
-      <div className="fixed top-0 left-0 w-full flex flex-row flex-1 justify-center px-4">
-        <div className="w-[1024px]">
+    <section className="flex flex-col size-full max-w-screen-lg pb-10">
+      <div className="fixed top-0 left-0 w-full flex flex-row flex-1 justify-center px-4 z-10">
+        <div className="w-[1024px] bg-white">
           <DashboardInfo />
         </div>
       </div>
