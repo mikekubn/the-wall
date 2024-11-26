@@ -3,6 +3,7 @@ import PostTable from '@/components/posts-table';
 import { getSession } from '@/lib/auth';
 import { PostProps } from '@/type';
 import { redirect } from 'next/navigation';
+import prisma from '@/lib/prisma';
 
 const getPosts = async () => {
   const items: PostProps[] = await prisma.post.findMany({
