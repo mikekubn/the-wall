@@ -23,6 +23,7 @@ const config: Config = {
         gray_2: '#AEAEB2',
         gray_3: '#C7C7CC',
         gray_5: '#E5E5EA',
+        gray_6: '#F2F2F7',
         blue: '#007AFF',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',

@@ -1,28 +1,9 @@
-import DialogUrl from '@/components/dialog-url';
 import Post from '@/components/post';
 import SortMenu from '@/components/sort-menu';
 import React, { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import { PostProps } from '@/type';
-import { unstable_cache } from 'next/cache';
-import prisma from '@/lib/prisma';
-
-const getPosts = unstable_cache(
-  async () => {
-    const items: PostProps[] = await prisma.post.findMany({
-      where: {
-        status: 'APPROVED',
-      },
-      include: {
-        rate: true,
-      },
-    });
-
-    return items;
-  },
-  ['posts'],
-  { revalidate: 3600, tags: ['posts'] },
-);
+import { getPosts } from '@/lib/queries';
 
 const HomePage = async ({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) => {
   const sort = (await searchParams).sort as string;
@@ -73,9 +54,6 @@ const HomePage = async ({ searchParams }: { searchParams: Promise<{ [key: string
           </Suspense>
         ))}
       </div>
-      <Suspense fallback={null}>
-        <DialogUrl />
-      </Suspense>
     </section>
   );
 };

@@ -49,22 +49,24 @@ const Rating: React.FC<{ post: PostProps }> = ({ post }) => {
   };
 
   return (
-    <div className="inline-flex items-center gap-6 md:gap-4">
+    <div className="inline-flex items-center gap-2">
       {isLoading && <LoadingSpinner className="size-[16px] stroke-gray_3 group-hover:stroke-white" />}
-      <button
-        disabled={isLoading}
-        onClick={() => updateRate('UP')}
-        className="inline-flex items-center gap-1 text-lime-700 group-hover:text-white disabled:cursor-not-allowed">
-        <ChevronUp className="size-[16px]" />
-        <span className="text-[16px]">{up}</span>
-      </button>
-      <button
-        disabled={isLoading}
-        onClick={() => updateRate('DOWN')}
-        className="inline-flex items-center gap-1 text-rose-600 group-hover:text-white disabled:cursor-not-allowed">
-        <ChevronDown className="size-[16px]" />
-        <span className="text-[16px]">{down}</span>
-      </button>
+      <div className="inline-flex items-center gap-4">
+        <button
+          disabled={isLoading}
+          onClick={() => updateRate('UP')}
+          className="inline-flex items-center gap-1 text-lime-700 group-hover:text-white disabled:cursor-not-allowed">
+          <ChevronUp className="size-[16px]" />
+          <span className="text-[16px]">{up}</span>
+        </button>
+        <button
+          disabled={isLoading}
+          onClick={() => updateRate('DOWN')}
+          className="inline-flex items-center gap-1 text-rose-600 group-hover:text-white disabled:cursor-not-allowed">
+          <ChevronDown className="size-[16px]" />
+          <span className="text-[16px]">{down}</span>
+        </button>
+      </div>
     </div>
   );
 };
