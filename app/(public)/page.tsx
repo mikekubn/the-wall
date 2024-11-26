@@ -27,7 +27,25 @@ const getPosts = unstable_cache(
 const HomePage = async ({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) => {
   const sort = (await searchParams).sort as string;
   const id = (await searchParams).id as string;
-  const posts: PostProps[] = await getPosts();
+  const items: PostProps[] = await getPosts();
+  const posts = items?.sort((a, b) => {
+    if (sort === 'new') {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    }
+
+    if (sort === 'old') {
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    }
+
+    if (sort === 'like') {
+      const averageA = (Number(a.rate?.up) + Number(a.rate?.down)) / 2;
+      const averageB = (Number(b.rate?.up) + Number(b.rate?.down)) / 2;
+
+      return averageB - averageA;
+    }
+
+    return 0;
+  });
 
   if (!sort) {
     if (id) {
