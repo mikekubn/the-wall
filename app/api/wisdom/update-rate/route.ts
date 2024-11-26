@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma';
 import { PostProps } from '@/type';
+import { revalidateTag } from 'next/cache';
 
 export const PATCH = async (req: Request) => {
   const { id, up, down } = await req.json();
@@ -13,6 +14,8 @@ export const PATCH = async (req: Request) => {
         ...(down && { down: Number(post?.rate?.down) - 1 }),
       },
     });
+
+    revalidateTag('posts');
 
     return new Response(JSON.stringify({ success: true, rate }), {
       status: 200,

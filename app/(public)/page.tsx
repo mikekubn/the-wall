@@ -24,16 +24,6 @@ const getPosts = unstable_cache(
   { revalidate: 3600, tags: ['posts'] },
 );
 
-// const getRates = unstable_cache(
-//   async () => {
-//     const items = await prisma.rate.findMany();
-
-//     return items;
-//   },
-//   ['rates'],
-//   { revalidate: 3600, tags: ['rates'] },
-// );
-
 const HomePage = async ({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) => {
   const sort = (await searchParams).sort as string;
   const id = (await searchParams).id as string;
