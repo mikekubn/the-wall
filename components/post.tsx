@@ -16,7 +16,7 @@ const Post: React.FC<{ post: PostProps }> = ({ post }) => {
   const sort = params.get('sort');
 
   return (
-    <div className="relative group h-[220px] w-[90%] md:w-[406px] md:h-[251px]">
+    <div className="relative group h-[220px] w-[90%] md:w-[406px] md:h-[251px] hover:drop-shadow-lg">
       <Link
         href={`/?sort=${sort}&id=${post?.id}`}
         className="size-full relative flex flex-col p-4 md:p-12 rounded-[12px] bg-white group-hover:bg-blue border border-gray_5">
