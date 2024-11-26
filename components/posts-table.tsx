@@ -6,19 +6,15 @@ import { ColumnDef, SortingState, VisibilityState, flexRender, getCoreRowModel, 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { PostProps } from '@/type';
 import clsx from 'clsx';
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useCallback } from 'react';
 import EditDialog from '@/components/edit-dialog';
 
-type Props = {
-  id: PostProps['id'];
-  role: PostProps['role'];
-  message: PostProps['message'];
-  createdAt: PostProps['createdAt'];
-  status: PostProps['status'];
-};
+type PostUpdateProps = Pick<PostProps, 'id' | 'status' | 'message' | 'role'>;
 
-const createColumns = (fetchData: () => Promise<void>): ColumnDef<Props>[] => [
+const createColumns = ({ handleUpdatePostData }: { handleUpdatePostData: ({ post }: { post: PostUpdateProps }) => void }): ColumnDef<PostProps>[] => [
   {
     accessorKey: 'id',
     header: 'ID',
@@ -38,11 +34,13 @@ const createColumns = (fetchData: () => Promise<void>): ColumnDef<Props>[] => [
   },
   {
     accessorKey: 'status',
-    header: ({ column }) => (
-      <button onClick={column.getToggleSortingHandler()} className="font-bold">
-        Status {column.getIsSorted() === 'asc' ? '✅' : column.getIsSorted() === 'desc' ? '⭕️' : '👀'}
-      </button>
-    ),
+    header: ({ column }) => {
+      return (
+        <button onClick={column.getToggleSortingHandler()} className="font-bold">
+          Status {column.getIsSorted() === 'asc' ? '✅' : column.getIsSorted() === 'desc' ? '⭕️' : '👀'}
+        </button>
+      );
+    },
     sortingFn: (rowA, rowB) => {
       const statusOrder = { APPROVED: 1, PENDING: 2, REJECTED: 3 };
       const statusA = rowA.getValue<'APPROVED' | 'PENDING' | 'REJECTED'>('status');
@@ -75,22 +73,71 @@ const createColumns = (fetchData: () => Promise<void>): ColumnDef<Props>[] => [
     accessorKey: 'actions',
     header: () => <div className="text-center">Actions</div>,
     cell: ({ row }) => {
-      const handleStatusChange = async (status: PostProps['status']) => {
-        const id = row.getValue('id');
+      return (
+        <div className="flex flex-row flex-1 justify-center gap-3">
+          <Link href={{ query: { editId: row.getValue('id') } }} className="text-blue hover:text-black">
+            Edit
+          </Link>
+          <button
+            disabled={row.getValue('status') === 'APPROVED'}
+            onClick={() =>
+              handleUpdatePostData({
+                post: {
+                  id: row.getValue('id'),
+                  status: 'APPROVED',
+                  role: row.getValue('role'),
+                  message: row.getValue('message'),
+                },
+              })
+            }
+            className="text-lime-600 hover:text-black disabled:cursor-not-allowed">
+            Approve
+          </button>
+          <button
+            disabled={row.getValue('status') === 'REJECTED'}
+            onClick={() =>
+              handleUpdatePostData({
+                post: {
+                  id: row.getValue('id'),
+                  status: 'REJECTED',
+                  role: row.getValue('role'),
+                  message: row.getValue('message'),
+                },
+              })
+            }
+            className="text-rose-600 hover:text-black disabled:cursor-not-allowed">
+            Reject
+          </button>
+        </div>
+      );
+    },
+  },
+];
+
+const PostsTable: React.FC<{ posts: PostProps[] }> = ({ posts }) => {
+  const router = useRouter();
+  const { toast } = useToast();
+  const [sorting, setSorting] = React.useState<SortingState>([{ id: 'status', desc: false }]);
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
+    id: false,
+  });
+  const [rowSelection, setRowSelection] = React.useState({});
+
+  const updatePostData = useCallback(
+    async ({ post }: { post: PostUpdateProps }) => {
+      try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_ENDPOINT}/api/wisdom/admin/update`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ id, status }),
+          body: JSON.stringify({ ...post }),
         });
 
         const data = await response.json();
 
-        await fetch(`${process.env.NEXT_PUBLIC_ENDPOINT}/api/wisdom/admin/getAll`);
-
         if (data?.success) {
-          fetchData();
+          router.refresh();
 
           toast({
             title: 'Success 🎉',
@@ -102,64 +149,20 @@ const createColumns = (fetchData: () => Promise<void>): ColumnDef<Props>[] => [
             description: 'Failed to update post status',
           });
         }
-      };
-
-      return (
-        <div className="flex flex-row flex-1 justify-center gap-3">
-          <Link href={{ query: { editId: row.getValue('id') } }} className="text-blue hover:text-black">
-            Edit
-          </Link>
-          <button
-            onClick={() => {
-              handleStatusChange('APPROVED');
-            }}
-            className="text-lime-600 hover:text-black">
-            Approve
-          </button>
-          <button
-            onClick={() => {
-              handleStatusChange('REJECTED');
-            }}
-            className="text-rose-600 hover:text-black">
-            Reject
-          </button>
-        </div>
-      );
+      } catch (error) {
+        toast({
+          title: 'Error 🚨',
+          description: `Failed to update post status: ${(error as Error).message}`,
+        });
+      }
     },
-  },
-];
+    [router, toast],
+  );
 
-const DataTableDemo = () => {
-  const [data, setData] = React.useState<Props[]>([]);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [sorting, setSorting] = React.useState<SortingState>([{ id: 'status', desc: false }]);
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
-    id: false,
-  });
-  const [rowSelection, setRowSelection] = React.useState({});
+  const columns = React.useMemo(() => createColumns({ handleUpdatePostData: updatePostData }), [updatePostData]);
 
-  const fetchData = React.useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const promise = await fetch(`${process.env.NEXT_PUBLIC_ENDPOINT}/api/wisdom/admin/getAll`);
-      const response: { success: boolean; items: PostProps[] } = await promise.json();
-      const sortItems = response?.items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-      setData(sortItems);
-    } catch (error) {
-      console.error('Failed to fetch data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  React.useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  const columns = React.useMemo(() => createColumns(fetchData), [fetchData]);
-
-  const table = useReactTable({
-    data,
+  const table = useReactTable<PostProps>({
+    data: posts,
     columns,
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -175,7 +178,7 @@ const DataTableDemo = () => {
 
   return (
     <div className="w-full">
-      <EditDialog callback={() => fetchData()} />
+      <EditDialog />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -190,13 +193,7 @@ const DataTableDemo = () => {
             ))}
           </TableHeader>
           <TableBody>
-            {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="text-center">
-                  Loading...
-                </TableCell>
-              </TableRow>
-            ) : data?.length ? (
+            {Boolean(posts.length) ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
@@ -206,8 +203,8 @@ const DataTableDemo = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                <TableCell colSpan={columns.length} className="text-center">
+                  Loading...
                 </TableCell>
               </TableRow>
             )}
@@ -218,4 +215,4 @@ const DataTableDemo = () => {
   );
 };
 
-export default DataTableDemo;
+export default PostsTable;

@@ -1,7 +1,8 @@
 import { getSession } from '@/lib/auth';
 import prisma from '@/lib/prisma';
+import { NextRequest } from 'next/server';
 
-export const GET = async () => {
+export const GET = async (req: NextRequest) => {
   const session = await getSession();
 
   if (!session) {
@@ -10,14 +11,16 @@ export const GET = async () => {
     });
   }
 
+  const id = req.nextUrl.searchParams.get('id');
+
   try {
-    const items = await prisma.post.findMany({
-      include: {
-        rate: true,
+    const item = await prisma.post.findUnique({
+      where: {
+        id: id as string,
       },
     });
 
-    return new Response(JSON.stringify({ success: true, items }), {
+    return new Response(JSON.stringify({ success: true, item }), {
       status: 200,
     });
   } catch (error) {

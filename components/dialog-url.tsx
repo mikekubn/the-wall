@@ -10,7 +10,7 @@ import { PostProps } from '@/type';
 
 const DialogUrl = () => {
   const [post, setPost] = useState<PostProps | null>(null);
-  const [isOpen, setOpen] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const params = new URLSearchParams(searchParams.toString());
@@ -18,13 +18,19 @@ const DialogUrl = () => {
   const id = params.get('id');
 
   const fetchPost = useCallback(async () => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_ENDPOINT}/api/wisdom/get?id=${id}`);
-    const data: { success: boolean; item: PostProps } = await response.json();
-    setPost(data.item);
+    setLoading(true);
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_ENDPOINT}/api/wisdom/get?id=${id}`);
+      const data: { success: boolean; item: PostProps } = await response.json();
+      setPost(data.item);
+    } catch (error) {
+      console.error('Failed to fetch post:', error);
+    } finally {
+      setLoading(false);
+    }
   }, [id]);
 
   const closeModal = () => {
-    setOpen(false);
     document.body.classList.remove('no-scroll');
     router.replace(`/?sort=${sort}`);
   };
@@ -41,7 +47,6 @@ const DialogUrl = () => {
 
   useEffect(() => {
     if (id) {
-      setOpen(true);
       document.body.classList.add('no-scroll');
     } else {
       closeModal();
@@ -64,35 +69,33 @@ const DialogUrl = () => {
   }
 
   return (
-    isOpen && (
-      <div className="dialog-backdrop fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={handleOutsideClick}>
-        <div
-          className="dialog-content bg-white shadow-lg relative flex flex-col w-[380px] h-fit min-h-[30%] md:size-1/2 rounded-[12px] p-4 md:p-12"
-          onClick={(e) => e.stopPropagation()}>
-          <button className="absolute top-2 right-4 text-black hover:text-blue" onClick={closeModal}>
-            ×
-          </button>
-          {post ? (
-            <div className="flex flex-col flex-1 h-full md:size-full items-center justify-between">
-              <p className="font-semibold font-inter text-gray_2 text-[16px]">{post.role}:</p>
-              <div className="flex flex-col flex-1 items-center justify-center size-full my-4">
-                <p className="font-semibold font-inter text-[28px] leading-normal md:text-center">
-                  <span className="italic mr-1">&quot;</span>
-                  <span>{post.message}</span>
-                  <span className="italic ml-1">&quot;</span>
-                </p>
-              </div>
-              <div className="flex flex-row gap-6 items-center">
-                <Rating post={post} />
-                <Share className="size-[16px] text-gray_1" />
-              </div>
+    <div className="dialog-backdrop fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={handleOutsideClick}>
+      <div
+        className="dialog-content bg-white shadow-lg relative flex flex-col w-[380px] h-fit min-h-[30%] md:size-1/2 rounded-[12px] p-4 md:p-12"
+        onClick={(e) => e.stopPropagation()}>
+        <button className="absolute top-2 right-4 text-black hover:text-blue" onClick={closeModal}>
+          ×
+        </button>
+        {isLoading ? (
+          <p className="flex flex-col flex-1 items-center justify-center text-[22px] md:text-[28px]">Loading...</p>
+        ) : (
+          <div className="flex flex-col flex-1 h-full md:size-full items-center justify-between">
+            <p className="font-semibold font-inter text-gray_2 text-[16px]">{post?.role}:</p>
+            <div className="flex flex-col flex-1 items-center justify-center size-full my-4">
+              <p className="font-semibold font-inter text-[28px] leading-normal md:text-center">
+                <span className="italic mr-1">&quot;</span>
+                <span>{post?.message}</span>
+                <span className="italic ml-1">&quot;</span>
+              </p>
             </div>
-          ) : (
-            <p className="text-[22px] md:text-[28px]">Loading...</p>
-          )}
-        </div>
+            <div className="flex flex-row gap-6 items-center">
+              {post && <Rating post={post} />}
+              <Share className="size-[16px] text-gray_1" />
+            </div>
+          </div>
+        )}
       </div>
-    )
+    </div>
   );
 };
 
