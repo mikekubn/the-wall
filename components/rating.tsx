@@ -6,8 +6,8 @@ import { ChevronDown } from 'lucide-react';
 import { PostProps } from '@/type';
 
 const Rating: React.FC<{ post: PostProps }> = ({ post }) => {
-  const [up, setUp] = React.useState(post?.rate.up);
-  const [down, setDown] = React.useState(post?.rate.down);
+  const [up, setUp] = React.useState(Number(post?.rate?.up));
+  const [down, setDown] = React.useState(Number(post?.rate?.down));
 
   const handleRateUp = () => {
     setUp(up + 1);
