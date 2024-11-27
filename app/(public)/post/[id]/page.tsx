@@ -31,7 +31,7 @@ export const generateMetadata = async ({ params }: { params: Params }): Promise<
     keywords: [post.role, post.message],
     description: post.message,
     alternates: {
-      canonical: `https://thewallofdigitalwisdom.vercel.app/post/${id}`,
+      canonical: `https://thewallofdigitalwisdom.tech/post/${id}`,
     },
   };
 };
