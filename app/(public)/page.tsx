@@ -4,6 +4,7 @@ import React, { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import { PostProps } from '@/type';
 import { getPosts } from '@/lib/queries';
+import LoadingSkeleton from '@/components/loading-skeleton';
 
 const HomePage = async ({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) => {
   const sort = (await searchParams).sort as string;
@@ -33,6 +34,10 @@ const HomePage = async ({ searchParams }: { searchParams: Promise<{ [key: string
       redirect(`/?sort=new&id=${id}`);
     }
     redirect('/?sort=new');
+  }
+
+  if (!posts) {
+    return <LoadingSkeleton />;
   }
 
   return (
