@@ -45,7 +45,11 @@ const PostPage = async ({ params, searchParams }: { params: Params; searchParams
   const post: PostProps | null = await getPost(id);
 
   if (!post) {
-    return <div></div>;
+    return (
+      <div className="relative flex flex-col justify-center items-center bg-gray_6 p-6 md:p-12 drop-shadow-lg rounded-[12px] w-[90%] md:w-2/3 lg:w-3/5 h-[300px] md:h-[360px] mx-auto">
+        <p className="font-semibold font-inter text-gray text-[14px] md:text-[16px]">We haven&apos;t found wisdom</p>
+      </div>
+    );
   }
 
   const date = formateDate(post?.createdAt);

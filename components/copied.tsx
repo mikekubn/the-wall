@@ -14,7 +14,7 @@ const ShareButton: React.FC<{ id: PostProps['id'] }> = ({ id }) => {
 
   const handleCopyUrl = React.useCallback(() => {
     try {
-      const url = `${window.location.origin}/?sort=${sort}&id=${id}`;
+      const url = `${window.location.origin}/post/${id}?sort=${sort}`;
       navigator.clipboard.writeText(url);
       toast({
         description: `Copied: ${url}`,
