@@ -18,3 +18,17 @@ export const getPosts = unstable_cache(
   ['posts'],
   { revalidate: 3600, tags: ['posts'] },
 );
+
+export const getPost = async (id: string) => {
+  const items: PostProps | null = await prisma.post.findUnique({
+    where: {
+      id,
+      status: 'APPROVED',
+    },
+    include: {
+      rate: true,
+    },
+  });
+
+  return items;
+};

@@ -6,26 +6,35 @@ import { CircleX } from 'lucide-react';
 import Link from 'next/link';
 import { Post } from '@prisma/client';
 import prisma from '@/lib/prisma';
+import { Metadata } from 'next/types';
+import { getPost } from '@/lib/queries';
 
 type Params = Promise<{ id: string }>;
-
-const getPost = async (id: string) => {
-  const items: PostProps | null = await prisma.post.findUnique({
-    where: {
-      id,
-      status: 'APPROVED',
-    },
-    include: {
-      rate: true,
-    },
-  });
-
-  return items;
-};
 
 export const revalidate = 60;
 
 export const dynamicParams = true;
+
+export const generateMetadata = async ({ params }: { params: Params }): Promise<Metadata> => {
+  const { id } = await params;
+  const post: PostProps | null = await getPost(id);
+
+  if (!post) {
+    return {
+      title: "We haven't found wisdom",
+      description: "We haven't found wisdom",
+    };
+  }
+
+  return {
+    title: post.role,
+    keywords: [post.role, post.message],
+    description: post.message,
+    alternates: {
+      canonical: `https://thewallofdigitalwisdom.vercel.app/post/${id}`,
+    },
+  };
+};
 
 export const generateStaticParams = async () => {
   const posts: Post[] = await prisma.post.findMany({
