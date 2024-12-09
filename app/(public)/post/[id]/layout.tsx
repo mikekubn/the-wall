@@ -1,8 +1,16 @@
 import React, { Suspense } from 'react';
 import { LayoutProps, PostProps } from '@/type';
+import type { Metadata } from 'next';
 
 import { getPosts } from '@/lib/queries';
 import Post from '@/components/post';
+
+export const metadata: Metadata = {
+  metadataBase: new URL('https://thewallofdigitalwisdom.tech'),
+  openGraph: {
+    images: '/og-image.png',
+  },
+};
 
 const PostLayout: React.FC<LayoutProps> = async ({ children }) => {
   const posts: PostProps[] = await getPosts();
