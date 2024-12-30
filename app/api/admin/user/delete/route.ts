@@ -1,6 +1,9 @@
-export const DELETE = async (req: Request) => {
-  const request = await req.json();
-  const { id, apiKey } = request;
+import prisma from '@/lib/prisma';
+import { NextRequest } from 'next/server';
+
+export const DELETE = async (req: NextRequest) => {
+  const apiKey = req.nextUrl?.searchParams?.get('apiKey');
+  const id = req.nextUrl?.searchParams?.get('id');
 
   if (process.env.API_KEY !== apiKey) {
     prisma.$disconnect();

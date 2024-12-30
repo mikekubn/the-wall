@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import prisma from '@/lib/prisma';
 
 export const GET = async (req: NextRequest) => {
   const apiKey = req.nextUrl?.searchParams?.get('apiKey');
