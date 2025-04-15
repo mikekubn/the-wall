@@ -50,6 +50,7 @@ const Rating: React.FC<{ post: PostProps }> = ({ post }) => {
 
   return (
     <div className="inline-flex items-center gap-2">
+      {/*@ts-ignore*/}
       {isLoading && <LoadingSpinner className="size-[16px] stroke-gray_3 group-hover:stroke-white" />}
       <div className="inline-flex items-center gap-4">
         <button
