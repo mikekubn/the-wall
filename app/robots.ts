@@ -5,8 +5,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/login', '/dashboard'],
+      disallow: ['/login', '/dashboard', '/api'],
     },
-    sitemap: 'https://thewallofdigitalwisdom.tech',
+    sitemap: 'https://thewallofdigitalwisdom.tech/sitemap.xml',
   };
 }

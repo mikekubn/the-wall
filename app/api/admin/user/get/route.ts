@@ -10,6 +10,7 @@ export const GET = async (req: NextRequest) => {
   }
 
   const users = await prisma.user.findMany();
+  await prisma.$disconnect();
 
   return new Response(JSON.stringify(users), { status: 200 });
 };
