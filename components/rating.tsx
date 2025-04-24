@@ -4,7 +4,7 @@ import React from 'react';
 import { ChevronUp } from 'lucide-react';
 import { ChevronDown } from 'lucide-react';
 import { PostProps } from '@/type';
-import LoadingSpinner from '@/public/loading.svg';
+import { ReactComponent as LoadingSpinner } from '@/public/loading.svg';
 import { useRouter } from 'next/navigation';
 
 const Rating: React.FC<{ post: PostProps }> = ({ post }) => {
@@ -50,7 +50,6 @@ const Rating: React.FC<{ post: PostProps }> = ({ post }) => {
 
   return (
     <div className="inline-flex items-center gap-2">
-      {/*@ts-ignore*/}
       {isLoading && <LoadingSpinner className="size-[16px] stroke-gray_3 group-hover:stroke-white" />}
       <div className="inline-flex items-center gap-4">
         <button

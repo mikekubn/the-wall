@@ -1,6 +1,6 @@
 import { LayoutProps } from '@/type';
 import Link from 'next/link';
-import TheWallComputer from '@/public/the-wall-logo.svg';
+import { ReactComponent as TheWallComputer } from '@/public/the-wall-logo.svg';
 import AddWisdom from '@/components/add-wisdom';
 
 const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
@@ -8,7 +8,6 @@ const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
     <main className="flex flex-col flex-1 min-h-screen items-center mx-auto max-w-screen-2xl pb-24 px-4">
       <section className="flex flex-col items-center my-7 md:my-9">
         <Link href={{ pathname: '/', query: { sort: 'new' } }}>
-          {/*@ts-ignore*/}
           <TheWallComputer className="h-[46px] w-[36px] md:h-[70px] md:w-[55px]" />
         </Link>
         <h1 className="text-[22px] md:text-4xl font-bold font-inter text-center my-3">The Wall of Digital Wisdom</h1>
